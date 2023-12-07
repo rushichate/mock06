@@ -92,9 +92,9 @@
         .then(res=>{
             localStorage.setItem("token",res.token)
             alert(res.message)
-            // if(res.message=="Login Successful"){
-            //     window.location.href=""
-            // }
+            if(res.message=="Login Successful"){
+                window.location.href="./frontend/onboard.html"
+            }
         }).catch((error)=>{
             console.log(error)
         })

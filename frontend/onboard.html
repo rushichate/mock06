@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onboard Dr.</title>
+    <style>
+        input{
+            display: block;
+            margin-top: 5px;
+        }
+        label{
+            display: block;
+            margin-top: 5px;
+        }
+        button{
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <form  id="Onboard">
+        <label for="">Name:</label>
+        <input type="text" placeholder="Name" id="name">
+        <label for="">Image URL:</label>
+        <input type="text" placeholder="imageURL" id="url">
+        <h3>Select Specialization</h3>
+        <select id="specialization">
+            <option value="">Select</option>
+        <option value="Cardiologist">Cardiologist</option>
+        <option value="Dermatologist">Dermatologist</option>
+        <option value="Pediatrician">Pediatrician</option>
+        <option value="Psychiatrist">Psychiatrist</option>
+        </select>
+        <label for="">Experience:</label>
+        <input type="text" placeholder="Experience" id="exp">
+        <label for="">Location:</label>
+        <input type="text" placeholder="Location" id="location">
+        <label for="">Date</label>
+        <input type="date"  id="date">
+        <label for="">Slots:</label>
+        <input type="number" placeholder="Slots" id="slots">
+        <label for="">Fee:</label>
+        <input type="number" placeholder="fee" id="fee">
+        <button type="submit">Onboard Now</button>
+    </form>
+    
+</body>
+<script>
+    const token = localStorage.getItem("token")
+    const OnboardForm = document.getElementById("Onboard")
+    OnboardForm.addEventListener("submit",function(e){
+        e.preventDefault()
+        name = document.getElementById("name").value
+        imageUrl = document.getElementById("url").value 
+        specialization = document.getElementById("specialization").value
+        experience = document.getElementById("exp").value 
+        locationIp = document.getElementById("location").value 
+        date = document.getElementById("date").value
+        slots = document.getElementById("slots").value
+        fee = document.getElementById("fee").value
+        const payload = {name,imageUrl,specialization,experience,locationIp,date,slots,fee}
+        fetch("http://localhost:7000/dr/appointment",{
+            method:"POST",
+            headers:{
+                "Content-type":"application/json",
+                'Authorization': `${token}`
+            },
+            body:JSON.stringify(payload)
+        }).then(res=>res.json())
+        .then(res=>{
+            alert(res.message)
+        }).catch((error)=>{
+            console.log("Error while onboarding",error)
+        })
+    })
+</script>
+</html>
