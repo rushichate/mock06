@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <nav>
+        <h2><a href="../index.html">Signup/Login</a></h2>
+        <h2><a href="./onboard.html">Onbord Doctors</a></h2>
+        <h2><a href="./dashboard.html">Doctors Dashboard</a></h2>
+        </nav>
+    <div id="container" style="display: grid; grid-template-columns: repeat(3,1fr);">
+
+    </div>
+    
+</body>
+<script>
+    const token = localStorage.getItem("token")
+    const container = document.getElementById("container")
+    container.innerHTML = ""
+    fetchAppointments()
+
+    function fetchAppointments(){
+        fetch("http://localhost:7000/dash/doctors",{
+            method:"GET",
+            headers:{
+                "Content-type":"application/json",
+                'Authorization': `${token}`
+            }
+        })
+        .then(res=>res.json())
+        .then(res=>{
+            display(res)
+            console.log(res)
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
+
+    function display(data){
+        data.forEach(appointment=>{
+            const card = document.createElement("div")
+
+            card.innerHTML = `
+                        <img src="${appointment.image}" alt="${appointment.name}">
+                        <h3>${appointment.name}</h3>
+                        <p>${appointment.specialization}</p>
+                        <p>${appointment.location}</p>
+                        <p>Date: ${appointment.date}</p>
+                        <p>Slots: ${appointment.slots}</p>
+                        <p>Fee: ${appointment.fee}</p>
+                        <button onclick="editAppointment(${appointment._id})">Edit</button>
+                        <button onclick="deleteAppointment('${appointment._id}')">Delete</button>
+
+            
+            `
+            container.appendChild(card)
+        })
+    }
+
+
+    function deleteAppointment(id) {
+    fetch(`http://localhost:7000/dash/doctors/${id}`, {
+        method: "DELETE",
+        headers: {
+            "Content-type": "application/json",
+            'Authorization': `${token}`
+        }
+    })
+    .then(res => res.json())
+    .then(res => {
+        alert(res.message);
+        fetchAppointments();
+    })
+    .catch(error => {
+        console.log(error);
+    });
+}
+
+</script>
+</html>
